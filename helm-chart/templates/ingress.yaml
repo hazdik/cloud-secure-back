@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloud-secure-back-ingress
+spec:
+  rules:
+    - host: cloud-secure-back.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cloud-secure-back
+                port:
+                  number: 3000

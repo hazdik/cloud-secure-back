@@ -1,0 +1,25 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm test
+      - name: Build Docker image
+        run: docker build -t cloud-secure-back:latest .
+      - name: Push Docker image
+        run: echo "Docker push step here"
+      - name: Deploy to EKS
+        run: echo "EKS deploy step here"

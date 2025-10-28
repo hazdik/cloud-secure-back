@@ -1,0 +1,4 @@
+apiVersion: v2
+name: cloud-secure-back
+version: 0.1.0
+description: Helm chart for cloud-secure-back microservices

@@ -1,5 +1,5 @@
 import { MessagingService } from '@cloud-secure/shared/services/MessagingService';
-import { MessageBrokerProvider } from '@cloud-secure/shared';
+import { MessageBrokerProvider } from '@cloud-secure/shared/providers/MessageBrokerProvider';
 import { 
   MessageQueues, 
   ExchangeTypes, 

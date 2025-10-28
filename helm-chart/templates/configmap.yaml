@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-secure-back-config
+  labels:
+    app: cloud-secure-back
+data:
+  AWS_REGION: "us-east-1"
+  AWS_S3_BUCKET: "your-bucket"
