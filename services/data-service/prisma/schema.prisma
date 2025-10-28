@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Data models for structured data storage
+model DataObject {
+  id          String      @id @default(uuid())
+  userId      String
+  type        String
+  name        String
+  content     Json
+  metadata    Json?
+  isPublic    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  permissions Permission[]
+}
+
+model Permission {
+  id          String      @id @default(uuid())
+  dataId      String
+  userId      String
+  accessType  AccessType
+  data        DataObject  @relation(fields: [dataId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum AccessType {
+  READ
+  WRITE
+  ADMIN
+}

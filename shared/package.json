@@ -1,0 +1,30 @@
+{
+  "name": "@cloud-secure/shared",
+  "version": "1.0.0",
+  "description": "Shared modules for Cloud Secure Backend",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "@prisma/client": "^3.0.0",
+    "mongodb": "^4.1.0",
+    "amqplib": "^0.8.0",
+    "redis": "^3.1.2",
+    "uuid": "^8.3.2",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "@types/amqplib": "^0.8.2",
+    "@types/redis": "^2.8.32",
+    "@types/mongodb": "^4.0.7",
+    "@types/uuid": "^8.3.1",
+    "typescript": "^4.5.4",
+    "jest": "^27.4.5",
+    "@types/jest": "^27.0.3"
+  }
+}

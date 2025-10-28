@@ -1,0 +1,3 @@
+type Query {
+  llmPrompt(prompt: String!, maxTokens: Int): String!
+}

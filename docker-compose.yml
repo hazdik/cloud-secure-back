@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:latest
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "${API_GATEWAY_PORT}:4000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - auth-service
+      - user-service
+      - data-service
+      - notification-service
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "${AUTH_SERVICE_PORT}:4001"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "${USER_SERVICE_PORT}:4002"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - postgres
+      - mongodb
+      - rabbitmq
+
+  data-service:
+    build:
+      context: ./services/data-service
+      dockerfile: Dockerfile
+    ports:
+      - "${DATA_SERVICE_PORT}:4003"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+      - rabbitmq
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "${NOTIFICATION_SERVICE_PORT}:4004"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - rabbitmq
+      - redis
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
