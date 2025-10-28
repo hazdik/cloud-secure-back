@@ -79,7 +79,7 @@ export class CacheService {
     const mgetAsync = promisify(multi.exec).bind(multi);
     const results = await mgetAsync();
     
-    return results.map(result => {
+  return results.map((result: any) => {
       if (!result) return null;
       try {
         return JSON.parse(result as string) as T;

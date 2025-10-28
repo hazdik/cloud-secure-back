@@ -1,18 +1,18 @@
-import { Channel, Connection } from 'amqplib';
+import { Channel, ChannelModel } from 'amqplib';
 import { v4 as uuidv4 } from 'uuid';
 import { MessageBrokerProvider } from '../providers/MessageBrokerProvider';
 import { Message, ExchangeTypes, MessageQueues, RoutingKeys } from '../types/messaging.types';
 
 export class MessagingService {
   private channel: Channel | null = null;
-  private connection: Connection | null = null;
+  private connection: ChannelModel | null = null;
 
   constructor(private messageBrokerProvider: MessageBrokerProvider) {}
 
   async initialize() {
-  this.connection = await this.messageBrokerProvider.getConnection();
-  if (!this.connection) throw new Error('Connection not initialized');
-  this.channel = await this.connection.createChannel();
+    this.connection = await this.messageBrokerProvider.getConnection();
+    if (!this.connection) throw new Error('Connection not initialized');
+    this.channel = await this.connection.createChannel();
     await this.setupExchanges();
     await this.setupQueues();
   }
@@ -94,7 +94,7 @@ export class MessagingService {
   ) {
     if (!this.channel) throw new Error('Channel not initialized');
 
-    await this.channel.consume(queue, async (msg) => {
+  await this.channel.consume(queue, async (msg: any) => {
       if (!msg) return;
 
       try {
