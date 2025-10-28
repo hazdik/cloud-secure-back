@@ -32,9 +32,15 @@
     "services/*"
   ],
   "dependencies": {
+    "@azure/arm-policy": "^6.0.0",
+    "@azure/identity": "^4.13.0",
+    "@azure/storage-blob": "^12.29.1",
+    "@google-cloud/security-center": "^9.2.1",
+    "@google-cloud/storage": "^7.17.2",
     "@types/node-cron": "^3.0.11",
     "@types/pdfkit": "^0.17.3",
     "@types/pg": "^8.15.6",
+    "aws-sdk": "^2.1692.0",
     "cross-env": "^7.0.3",
     "graphql": "^16.11.0"
   },
