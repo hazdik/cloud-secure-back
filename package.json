@@ -1,8 +1,17 @@
 {
   "name": "cloud-secure-back",
   "version": "1.0.0",
-  "description": "Cloud Secure Backend - Microservices Architecture",
+  "description": "Cloud Secure Backend Monorepo",
+  "private": true,
+  "main": "shared/app.js",
   "scripts": {
+    "start:local": "cross-env NODE_ENV=local node shared/app.js",
+    "start:dev": "cross-env NODE_ENV=dev node shared/app.js",
+    "start:stg": "cross-env NODE_ENV=stg node shared/app.js",
+    "start:prod": "cross-env NODE_ENV=prod node shared/app.js",
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces",
+    "lint": "eslint shared/src --ext .ts",
     "install:all": "npm run install:gateway && npm run install:auth && npm run install:user && npm run install:data && npm run install:notification",
     "install:gateway": "cd services/api-gateway && npm install",
     "install:auth": "cd services/auth-service && npm install",
@@ -10,13 +19,29 @@
     "install:data": "cd services/data-service && npm install",
     "install:notification": "cd services/notification-service && npm install",
     "dev": "docker-compose up",
-    "build": "npm run build:all",
     "build:all": "npm run build:gateway && npm run build:auth && npm run build:user && npm run build:data && npm run build:notification",
     "build:gateway": "cd services/api-gateway && npm run build",
     "build:auth": "cd services/auth-service && npm run build",
     "build:user": "cd services/user-service && npm run build",
     "build:data": "cd services/data-service && npm run build",
-    "build:notification": "cd services/notification-service && npm run build"
+    "build:notification": "cd services/notification-service && npm run build",
+    "watch:queue": "webpack --config webpack.queue.config.js --watch"
+  },
+  "workspaces": [
+    "shared",
+    "services/*"
+  ],
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "typescript": "^4.5.4",
+    "eslint": "^8.50.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0",
+    "ts-loader": "^9.4.4"
   },
   "keywords": [
     "typescript",
@@ -29,9 +54,5 @@
     "microservices"
   ],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^16.11.7",
-    "typescript": "^4.5.4"
-  }
+  "license": "ISC"
 }
