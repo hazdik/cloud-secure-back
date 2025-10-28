@@ -77,4 +77,78 @@
 - Logs, metrics, and compliance data are stored in centralized cloud storage (S3, Blob, GCP).
 - For troubleshooting, restart your editor/TypeScript server after major config changes.
 
+## AI Threat Analyzer Architecture
+
+- **API Framework:** FastAPI (Python)
+- **Queue:** RabbitMQ (configured via Node .env)
+- **Database:** MongoDB (configured via Node .env)
+- **Cache:** Redis (configured via Node .env)
+- **Model:** ML model loaded from path in .env
+- **Endpoints:** `/analyze` (POST) — Analyze logs and store anomalies
+- **Background:** Consumes logs from RabbitMQ, stores anomalies in MongoDB and Redis
+- **Communication:**
+  - Receives logs/events from Node microservices via RabbitMQ
+  - Stores anomalies in MongoDB and Redis for cross-service access
+  - Can publish metrics/alerts to other services via queue or cache
+- **Config:** All connection strings and paths are loaded from `.env` for seamless integration with Node.js ecosystem
+
+## AI Threat Analyzer Architecture (with NLP)
+
+### Overview
+- **Framework:** FastAPI (Python)
+- **Design Pattern:** Prototype pattern for extensible analyzers
+- **API:** RESTful endpoints for log analysis, Q&A, anomaly reporting
+- **Queue:** RabbitMQ (event ingestion from Node microservices)
+- **Database:** MongoDB (anomaly storage)
+- **Cache:** Redis (fast anomaly lookup)
+- **ML Model:** Scikit-learn, joblib (custom or pre-trained)
+- **NLP Dependencies:**
+  - `transformers` (HuggingFace) — for advanced question answering and text classification
+  - `nltk` — for text preprocessing, tokenization
+  - `spacy` — for entity recognition, intent detection
+  - `sentence-transformers` — for semantic search and similarity
+  - `scikit-learn` — for anomaly detection/classification
+  - `joblib` — for model serialization
+- **Config:** All connection strings, model paths, and credentials loaded from `.env` (via `python-dotenv`)
+
+### Key Features
+- **Log Analysis:**
+  - Receives logs/events via RabbitMQ
+  - Extracts features and scores anomalies using ML model
+  - Stores anomalies in MongoDB and Redis
+- **NLP Q&A Bot:**
+  - `/ask` endpoint uses NLP models to answer security/compliance questions
+  - Can use HuggingFace transformers for contextual answers
+  - Extensible knowledge base for cloud, security, compliance topics
+- **Remediation & Solution Engine:**
+  - Maps detected anomalies to recommended actions
+  - Can trigger automated remediation workflows via API or queue
+- **Reporting:**
+  - `/anomalies/report` endpoint provides detailed anomaly reports with severity and remedies
+  - Supports CSV/PDF export for audit/compliance
+- **Extensibility:**
+  - Prototype pattern allows easy addition of new analyzers (e.g., for new log types or ML models)
+  - NLP pipeline can be extended for chatbots, semantic search, entity extraction
+
+### Example Dependencies (add to `requirements.txt`)
+```
+fastapi
+uvicorn
+pika
+pymongo
+joblib
+python-dotenv
+transformers
+nltk
+spacy
+sentence-transformers
+scikit-learn
+redis
+```
+
+### Communication
+- Node.js microservices send logs/events to RabbitMQ
+- AI Threat Analyzer consumes, analyzes, and stores results
+- Other services can query anomalies, ask questions, or trigger remediation via REST API
+
 ---

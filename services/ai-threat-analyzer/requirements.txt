@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pika
+pymongo
+joblib
+python-dotenv
